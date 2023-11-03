@@ -2,6 +2,7 @@
 #define _RBTREE_H_
 
 #include <stddef.h>
+#include <stdio.h>
 
 typedef enum { RBTREE_RED, RBTREE_BLACK } color_t;
 
@@ -28,5 +29,5 @@ node_t *rbtree_max(const rbtree *);
 int rbtree_erase(rbtree *, node_t *);
 
 int rbtree_to_array(const rbtree *, key_t *, const size_t);
-
+int rbtree_print(FILE *, const rbtree *);
 #endif  // _RBTREE_H_

@@ -39,6 +39,28 @@ int rbtree_erase(rbtree *t, node_t *p) {
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
-  // TODO: implement to_array
+  return 0;
+}
+
+void rbtree_print_preorder__(FILE *stream, const rbtree *t, node_t *n, size_t indent, size_t tab_size) {
+  if (n == t->nil) {
+    return;
+  }
+  
+  for (size_t i = 0; i < indent; ++i) {
+    fprintf(stream, " ");
+  }
+
+  fprintf(stream, "%d(%s)\n", n->key, (n->color == RBTREE_BLACK) ? "B" : "R");
+  rbtree_print_preorder__(stream, t, n->left, indent + tab_size, tab_size);
+  rbtree_print_preorder__(stream, t, n->right, indent + tab_size, tab_size);
+}
+
+int rbtree_print(FILE *stream, const rbtree *t) {
+  if (stream == NULL) {
+    return -1;
+  }
+
+  rbtree_print_preorder__(stream, t, t->root, 0, 4);
   return 0;
 }
