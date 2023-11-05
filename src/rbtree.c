@@ -33,8 +33,34 @@ node_t *new_node__(rbtree *t, key_t key) {
   return n;
 }
 
+void delete_node__(rbtree *t, node_t *n) {
+  if (t == NULL || n == NULL) {
+    return;
+  }
+
+  if (n->left != t->nil) {
+    delete_node__(t, n->left);
+  }
+
+  if (n->right != t->nil) {
+    delete_node__(t, n->right);
+  }
+
+  free(n);
+}
+
 void delete_rbtree(rbtree *t) {
-  // TODO: reclaim the tree nodes's memory
+  node_t *root = t->root;
+  if (root != NULL) {
+    delete_node__(t, root);
+  }
+  
+  if (t->nil != root) {
+    free(t->nil);
+    root = NULL;
+    t->nil = NULL;
+  }
+  
   free(t);
 }
 
