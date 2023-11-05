@@ -106,8 +106,72 @@ void rbtree_right_rotate__(rbtree *t, node_t *n) {
   n->parent = y;
 }
 
+void rbtree_insert_fixup__(rbtree *t, node_t *n) {
+  node_t *uncle; 
+  while (n->parent->color == RBTREE_RED) {
+    if (n->parent == n->parent->parent->left) {
+      uncle = n->parent->parent->right;
+      if (uncle->color == RBTREE_RED) {
+        n->parent->color = RBTREE_BLACK;
+        uncle->color = RBTREE_BLACK;
+        n->parent->parent->color = RBTREE_RED;
+        n = n->parent->parent;
+      } else {
+        if (n == n->parent->right) {
+          n = n->parent;
+          rbtree_left_rotate__(t, n);
+        }
+
+        n->parent->color = RBTREE_BLACK;
+        n->parent->parent->color = RBTREE_RED;
+        rbtree_right_rotate__(t, n->parent->parent);
+      }
+    } else {
+      uncle = n->parent->parent->left;
+      if (uncle->color == RBTREE_RED) {
+        n->parent->color = RBTREE_BLACK;
+        uncle->color = RBTREE_BLACK;
+        n->parent->parent->color = RBTREE_RED;
+        n = n->parent->parent;
+      } else {
+        if (n == n->parent->left) {
+          n = n->parent;
+          rbtree_right_rotate__(t, n);
+        }
+
+        n->parent->color = RBTREE_BLACK;
+        n->parent->parent->color = RBTREE_RED;
+        rbtree_left_rotate__(t, n->parent->parent);
+      }
+    }
+  }
+
+  t->root->color = RBTREE_BLACK;
+}
+
 node_t *rbtree_insert(rbtree *t, const key_t key) {
-  // TODO: implement insert
+  node_t *parent = t->nil;
+  node_t *cursor = t->root;
+  while (cursor != t->nil) {
+    parent = cursor;
+    if (key < cursor->key) {
+      cursor = cursor->left;
+      continue;
+    }
+    cursor = cursor->right;
+  }
+
+  node_t *node = new_node__(t, key);
+  node->parent = parent;
+  if (parent == t->nil) {
+    t->root = node;
+  } else if (node->key < parent->key) {
+    parent->left = node;
+  } else {
+    parent->right = node;
+  }
+
+  rbtree_insert_fixup__(t, node);
   return t->root;
 }
 
