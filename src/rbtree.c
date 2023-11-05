@@ -64,6 +64,48 @@ void delete_rbtree(rbtree *t) {
   free(t);
 }
 
+void rbtree_left_rotate__(rbtree *t, node_t *n) {
+  node_t *y = n->right;
+  n->right = y->left;
+  if (y->left != t->nil) {
+    y->left->parent = n;
+  }
+
+  y->parent = n->parent;
+
+  if (n->parent == t->nil) {
+    t->root = y;
+  } else if (n == n->parent->left) {
+    n->parent->left = y;
+  } else {
+    n->parent->right = y;
+  }
+
+  y->left = n;
+  n->parent = y;
+}
+
+void rbtree_right_rotate__(rbtree *t, node_t *n) {
+  node_t *y = n->left;
+  n->left = y->right;
+  if (y->right != t->nil) {
+    y->right->parent = n;
+  }
+
+  y->parent = n->parent;
+  
+  if (n->parent == t->nil) {
+    t->root = y;
+  } else if (n == n->parent->right) {
+    n->parent->right = y;
+  } else {
+    n->parent->left = y;
+  }
+
+  y->right = n;
+  n->parent = y;
+}
+
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   // TODO: implement insert
   return t->root;
