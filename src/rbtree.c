@@ -2,6 +2,10 @@
 
 #include <stdlib.h>
 
+/**
+ * @brief 힙에 새로운 rbtree를 생성하고 0으로 초기화합니다.
+ * @return 생성된 rbtree의 포인터를 반환합니다.
+ */
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
   if (p == NULL) {
@@ -19,6 +23,12 @@ rbtree *new_rbtree(void) {
   return p;
 }
 
+/**
+ * @brief 힙에 새로운 node_t를 생성하고 0으로 초기화합니다.
+ * @param[in] t: 노드를 생성할 rbtree
+ * @param[in] key: 해당 노드의 키 값
+ * @return 생성된 node_t의 포인터를 반환합니다.
+ */
 node_t *new_node__(rbtree *t, key_t key) {
   node_t *n = (node_t *)calloc(1, sizeof(node_t));
   if (n == NULL) {
@@ -33,6 +43,11 @@ node_t *new_node__(rbtree *t, key_t key) {
   return n;
 }
 
+/**
+ * @brief rbtree를 삭제합니다.
+ * @param[in] t: 삭제할 rbtree
+ * @param[in] n: 삭제할 서브트리
+ */
 void delete_node__(rbtree *t, node_t *n) {
   if (t == NULL || n == NULL) {
     return;
@@ -49,6 +64,10 @@ void delete_node__(rbtree *t, node_t *n) {
   free(n);
 }
 
+/**
+ * @brief rbtree를 삭제합니다.
+ * @param[in] t: 삭제할 rbtree
+ */
 void delete_rbtree(rbtree *t) {
   node_t *root = t->root;
   if (root != NULL) {
@@ -64,6 +83,11 @@ void delete_rbtree(rbtree *t) {
   free(t);
 }
 
+/**
+ * @brief 노드를 왼쪽으로 회전합니다.
+ * @param[in] t: 회전할 rbtree
+ * @param[in] n: 회전할 노드
+ */
 void rbtree_left_rotate__(rbtree *t, node_t *n) {
   node_t *y = n->right;
   n->right = y->left;
@@ -85,6 +109,11 @@ void rbtree_left_rotate__(rbtree *t, node_t *n) {
   n->parent = y;
 }
 
+/**
+ * @brief 노드를 오른쪽으로 회전합니다.
+ * @param[in] t: 회전할 rbtree
+ * @param[in] n: 회전할 노드
+ */
 void rbtree_right_rotate__(rbtree *t, node_t *n) {
   node_t *y = n->left;
   n->left = y->right;
@@ -106,6 +135,11 @@ void rbtree_right_rotate__(rbtree *t, node_t *n) {
   n->parent = y;
 }
 
+/**
+ * @brief 노드 삽입 후 망가진 rbtree의 성질을 복구합니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] n: 삽입된 노드
+ */
 void rbtree_insert_fixup__(rbtree *t, node_t *n) {
   node_t *uncle; 
   while (n->parent->color == RBTREE_RED) {
@@ -149,6 +183,12 @@ void rbtree_insert_fixup__(rbtree *t, node_t *n) {
   t->root->color = RBTREE_BLACK;
 }
 
+/**
+ * @brief 새로운 키를 rbtree에 삽입합니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] key: 키
+ * @return 삽입한 노드의 포인터를 반환합니다.
+ */
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   node_t *parent = t->nil;
   node_t *cursor = t->root;
@@ -175,6 +215,12 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   return t->root;
 }
 
+/**
+ * @brief rbtree에 키가 같은 노드를 찾습니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] key: 키
+ * @return 찾았다면 노드의 포인터를 반환하고 찾지 못했다면 @b NULL 을 반환합니다.
+ */
 node_t *rbtree_find(const rbtree *t, const key_t key) {
   node_t *cursor = t->root;
   while (cursor != t->nil) {
@@ -196,6 +242,12 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
   return NULL;
 }
 
+/**
+ * @brief 서브트리의 최솟값을 찾습니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] subroot: 대상 서브트리의 루트 
+ * @return 찾았다면 노드의 포인터를 반환하고 찾지 못했다면 @b NULL 을 반환합니다.
+ */
 node_t *rbtree_sub_min(const rbtree *t, node_t *subroot) {
   if (subroot == NULL) {
     return NULL;
@@ -209,6 +261,12 @@ node_t *rbtree_sub_min(const rbtree *t, node_t *subroot) {
   return cursor;
 }
 
+/**
+ * @brief 서브트리의 최댓값을 찾습니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] subroot: 대상 서브트리의 루트 
+ * @return 찾았다면 노드의 포인터를 반환하고 찾지 못했다면 @b NULL 을 반환합니다.
+ */
 node_t *rbtree_sub_max(const rbtree *t, node_t *subroot) {
   if (subroot == NULL) {
     return NULL;
@@ -222,6 +280,11 @@ node_t *rbtree_sub_max(const rbtree *t, node_t *subroot) {
   return cursor;
 }
 
+/**
+ * @brief 최솟값을 찾습니다.
+ * @param[in] t: 대상 rbtree
+ * @return 최솟값을 가진 노드의 포인터를 반환합니다.
+ */
 node_t *rbtree_min(const rbtree *t) {
   node_t *cursor = t->root;
   while (cursor->left != t->nil) {
@@ -231,6 +294,11 @@ node_t *rbtree_min(const rbtree *t) {
   return cursor;
 }
 
+/**
+ * @brief 최댓값을 찾습니다.
+ * @param[in] t: 대상 rbtree
+ * @return 최댓값을 가진 노드의 포인터를 반환합니다.
+ */
 node_t *rbtree_max(const rbtree *t) {
   node_t *cursor = t->root;
   while (cursor->right != t->nil) {
@@ -240,6 +308,12 @@ node_t *rbtree_max(const rbtree *t) {
   return cursor;
 }
 
+/**
+ * @brief dest에 src를 옮깁니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] dest: 옮겨질 노드
+ * @param[in] src: 옮길 서브트리의 루트 노드
+ */
 void rbtree_transplant__(rbtree *t, node_t *dest, node_t *src) {
   if (dest->parent == t->nil) {
     t->root = src;
@@ -251,6 +325,11 @@ void rbtree_transplant__(rbtree *t, node_t *dest, node_t *src) {
   src->parent = dest->parent;
 }
 
+/**
+ * @brief 노드 삭제로 인해 망가진 rbtree의 성질을 복구합니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] n: 대상 노드
+ */
 void rbtree_erase_fixup__(rbtree *t, node_t *n) {
   node_t *uncle;
   while (n != t->root && n->color == RBTREE_BLACK) {
@@ -310,6 +389,11 @@ void rbtree_erase_fixup__(rbtree *t, node_t *n) {
   n->color = RBTREE_BLACK;
 }
 
+/**
+ * @brief 노드를 삭제합니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] p: 대상 노드
+ */
 int rbtree_erase(rbtree *t, node_t *p) {
   node_t *x;
   node_t *y = p;
@@ -347,6 +431,14 @@ int rbtree_erase(rbtree *t, node_t *p) {
   return 0;
 }
 
+/**
+ * @brief rbtree를 중위 순회 순서로 배열에 씁니다.
+ * @param[in] t: 대상 rbtree
+ * @param[in] n: 현재 노드
+ * @param[out] arr: 노드의 키를 중위 순회 순서로 탐색되어 저장할 키 배열
+ * @param[in] idx: 배열의 현재 인덱스
+ * @param[in] len: 배열의 길이
+ */
 int rbtree_to_array_inorder__(const rbtree *t, node_t *n, key_t *arr, size_t idx, const size_t len) {
   if (n == t->nil) {
     return idx;
@@ -367,11 +459,25 @@ int rbtree_to_array_inorder__(const rbtree *t, node_t *n, key_t *arr, size_t idx
   return idx;
 }
 
+/**
+ * @brief rbtree를 중위 순회 순서로 배열에 씁니다.
+ * @param[in] t: 대상 rbtree
+ * @param[out] arr: 노드의 키를 중위 순회 순서로 탐색되어 저장할 키 배열
+ * @param[in] n: 배열의 길이
+ */
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   rbtree_to_array_inorder__(t, t->root, arr, 0, n);
   return 0;
 }
 
+/**
+ * @brief rbtree를 스트림에 출력합니다.
+ * @param[out] stream: 대상 stream
+ * @param[in] t: 대상 rbtree
+ * @param[in] n: 현재 노드
+ * @param[in] indent: 현재 수준
+ * @param[in] tab_size: 탭 사이즈
+ */
 void rbtree_print_preorder__(FILE *stream, const rbtree *t, node_t *n, size_t indent, size_t tab_size) {
   if (n == t->nil) {
     return;
@@ -386,6 +492,11 @@ void rbtree_print_preorder__(FILE *stream, const rbtree *t, node_t *n, size_t in
   rbtree_print_preorder__(stream, t, n->right, indent + tab_size, tab_size);
 }
 
+/**
+ * @brief rbtree를 스트림에 출력합니다.
+ * @param[out] stream: 대상 stream
+ * @param[in] t: 대상 rbtree 
+ */
 int rbtree_print(FILE *stream, const rbtree *t) {
   if (stream == NULL) {
     return -1;
