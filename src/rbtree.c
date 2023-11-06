@@ -347,8 +347,28 @@ int rbtree_erase(rbtree *t, node_t *p) {
   return 0;
 }
 
+int rbtree_to_array_inorder__(const rbtree *t, node_t *n, key_t *arr, size_t idx, const size_t len) {
+  if (n == t->nil) {
+    return idx;
+  }
+
+  if (idx >= len) {
+    return -1;
+  }
+
+  idx = rbtree_to_array_inorder__(t, n->left, arr, idx, len);
+  if (idx == -1) {
+    return -1;
+  }
+
+  arr[idx++] = n->key;
+  idx = rbtree_to_array_inorder__(t, n->right, arr, idx, len);
+
+  return idx;
+}
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
+  rbtree_to_array_inorder__(t, t->root, arr, 0, n);
   return 0;
 }
 
