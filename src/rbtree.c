@@ -14,6 +14,10 @@ rbtree *new_rbtree(void) {
 
   p->nil = (node_t *)calloc(1, sizeof(node_t));
   if (p->nil == NULL) {
+    if (p != NULL) {
+      free(p);
+    }
+    
     return NULL;
   }
 
