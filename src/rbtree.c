@@ -250,7 +250,7 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
  * @brief 서브트리의 최솟값을 찾습니다.
  * @param[in] t: 대상 rbtree
  * @param[in] subroot: 대상 서브트리의 루트 
- * @return 찾았다면 노드의 포인터를 반환하고 찾지 못했다면 @b NULL 을 반환합니다.
+ * @return subroot가 NULL이면 NULL을 반환하고, 그렇지 않으면 서브트리의 최솟값을 반환합니다.
  */
 node_t *rbtree_sub_min(const rbtree *t, node_t *subroot) {
   if (subroot == NULL) {
@@ -269,7 +269,7 @@ node_t *rbtree_sub_min(const rbtree *t, node_t *subroot) {
  * @brief 서브트리의 최댓값을 찾습니다.
  * @param[in] t: 대상 rbtree
  * @param[in] subroot: 대상 서브트리의 루트 
- * @return 찾았다면 노드의 포인터를 반환하고 찾지 못했다면 @b NULL 을 반환합니다.
+ * @return subroot가 NULL이면 NULL을 반환하고, 그렇지 않으면 서브트리의 최댓값을 반환합니다.
  */
 node_t *rbtree_sub_max(const rbtree *t, node_t *subroot) {
   if (subroot == NULL) {
