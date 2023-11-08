@@ -1,4 +1,4 @@
-.PHONY: help build test build_test
+.PHONY: help build test build_test clean
 
 help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
