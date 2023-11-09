@@ -33,7 +33,7 @@ rbtree *new_rbtree(void) {
  * @param[in] key: 해당 노드의 키 값
  * @return 생성된 node_t의 포인터를 반환합니다.
  */
-node_t *new_node__(rbtree *t, key_t key) {
+static node_t *new_node__(rbtree *t, key_t key) {
   node_t *n = (node_t *)calloc(1, sizeof(node_t));
   if (n == NULL) {
     return NULL;
@@ -52,7 +52,7 @@ node_t *new_node__(rbtree *t, key_t key) {
  * @param[in] t: 삭제할 rbtree
  * @param[in] n: 삭제할 서브트리
  */
-void delete_node__(rbtree *t, node_t *n) {
+static void delete_node__(rbtree *t, node_t *n) {
   if (t == NULL || n == NULL) {
     return;
   }
@@ -92,7 +92,7 @@ void delete_rbtree(rbtree *t) {
  * @param[in] t: 회전할 rbtree
  * @param[in] n: 회전할 노드
  */
-void rbtree_left_rotate__(rbtree *t, node_t *n) {
+static void rbtree_left_rotate__(rbtree *t, node_t *n) {
   node_t *y = n->right;
   n->right = y->left;
   if (y->left != t->nil) {
@@ -118,7 +118,7 @@ void rbtree_left_rotate__(rbtree *t, node_t *n) {
  * @param[in] t: 회전할 rbtree
  * @param[in] n: 회전할 노드
  */
-void rbtree_right_rotate__(rbtree *t, node_t *n) {
+static void rbtree_right_rotate__(rbtree *t, node_t *n) {
   node_t *y = n->left;
   n->left = y->right;
   if (y->right != t->nil) {
@@ -144,7 +144,7 @@ void rbtree_right_rotate__(rbtree *t, node_t *n) {
  * @param[in] t: 대상 rbtree
  * @param[in] n: 삽입된 노드
  */
-void rbtree_insert_fixup__(rbtree *t, node_t *n) {
+static void rbtree_insert_fixup__(rbtree *t, node_t *n) {
   node_t *uncle; 
   while (n->parent->color == RBTREE_RED) {
     if (n->parent == n->parent->parent->left) {
@@ -252,7 +252,7 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
  * @param[in] subroot: 대상 서브트리의 루트 
  * @return subroot가 NULL이면 NULL을 반환하고, 그렇지 않으면 서브트리의 최솟값을 반환합니다.
  */
-node_t *rbtree_sub_min(const rbtree *t, node_t *subroot) {
+static node_t *rbtree_sub_min__(const rbtree *t, node_t *subroot) {
   if (subroot == NULL) {
     return NULL;
   }
@@ -271,7 +271,7 @@ node_t *rbtree_sub_min(const rbtree *t, node_t *subroot) {
  * @param[in] subroot: 대상 서브트리의 루트 
  * @return subroot가 NULL이면 NULL을 반환하고, 그렇지 않으면 서브트리의 최댓값을 반환합니다.
  */
-node_t *rbtree_sub_max(const rbtree *t, node_t *subroot) {
+static node_t *rbtree_sub_max__(const rbtree *t, node_t *subroot) {
   if (subroot == NULL) {
     return NULL;
   }
@@ -318,7 +318,7 @@ node_t *rbtree_max(const rbtree *t) {
  * @param[in] dest: 옮겨질 노드
  * @param[in] src: 옮길 서브트리의 루트 노드
  */
-void rbtree_transplant__(rbtree *t, node_t *dest, node_t *src) {
+static void rbtree_transplant__(rbtree *t, node_t *dest, node_t *src) {
   if (dest->parent == t->nil) {
     t->root = src;
   } else if (dest == dest->parent->left) {
@@ -334,7 +334,7 @@ void rbtree_transplant__(rbtree *t, node_t *dest, node_t *src) {
  * @param[in] t: 대상 rbtree
  * @param[in] n: 대상 노드
  */
-void rbtree_erase_fixup__(rbtree *t, node_t *n) {
+static void rbtree_erase_fixup__(rbtree *t, node_t *n) {
   node_t *uncle;
   while (n != t->root && n->color == RBTREE_BLACK) {
     if (n == n->parent->left) {
@@ -410,7 +410,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
     x = p->left;
     rbtree_transplant__(t, p, p->left);
   } else {
-    y = rbtree_sub_min(t, p->right);
+    y = rbtree_sub_min__(t, p->right);
     y_color = y->color;
     x = y->right;
     if (y->parent == p) {
@@ -482,7 +482,7 @@ int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
  * @param[in] indent: 현재 수준
  * @param[in] tab_size: 탭 사이즈
  */
-void rbtree_print_preorder__(FILE *stream, const rbtree *t, node_t *n, size_t indent, size_t tab_size) {
+static void rbtree_print_preorder__(FILE *stream, const rbtree *t, node_t *n, size_t indent, size_t tab_size) {
   if (n == t->nil) {
     return;
   }
