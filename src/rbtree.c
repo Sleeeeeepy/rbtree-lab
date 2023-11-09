@@ -335,55 +335,55 @@ static void rbtree_transplant__(rbtree *t, node_t *dest, node_t *src) {
  * @param[in] n: 대상 노드
  */
 static void rbtree_erase_fixup__(rbtree *t, node_t *n) {
-  node_t *uncle;
+  node_t *brother;
   while (n != t->root && n->color == RBTREE_BLACK) {
     if (n == n->parent->left) {
-      uncle = n->parent->right;
-      if (uncle->color == RBTREE_RED) {
-        uncle->color = RBTREE_BLACK;
+      brother = n->parent->right;
+      if (brother->color == RBTREE_RED) {
+        brother->color = RBTREE_BLACK;
         n->parent->color = RBTREE_RED;
         rbtree_left_rotate__(t, n->parent);
-        uncle = n->parent->right;
+        brother = n->parent->right;
       }
 
-      if (uncle->left->color == RBTREE_BLACK && uncle->right->color == RBTREE_BLACK) {
-        uncle->color = RBTREE_RED;
+      if (brother->left->color == RBTREE_BLACK && brother->right->color == RBTREE_BLACK) {
+        brother->color = RBTREE_RED;
         n = n->parent;
       } else {
-        if (uncle->right->color == RBTREE_BLACK) {
-          uncle->left->color = RBTREE_BLACK;
-          uncle->color = RBTREE_RED;
-          rbtree_right_rotate__(t, uncle);
-          uncle = n->parent->right;
+        if (brother->right->color == RBTREE_BLACK) {
+          brother->left->color = RBTREE_BLACK;
+          brother->color = RBTREE_RED;
+          rbtree_right_rotate__(t, brother);
+          brother = n->parent->right;
         }
-        uncle->color = n->parent->color;
+        brother->color = n->parent->color;
         n->parent->color = RBTREE_BLACK;
-        uncle->right->color = RBTREE_BLACK;
+        brother->right->color = RBTREE_BLACK;
         rbtree_left_rotate__(t, n->parent);
         n = t->root;
       }
     } else {
-      uncle = n->parent->left;
-      if (uncle->color == RBTREE_RED) {
-        uncle->color = RBTREE_BLACK;
+      brother = n->parent->left;
+      if (brother->color == RBTREE_RED) {
+        brother->color = RBTREE_BLACK;
         n->parent->color = RBTREE_RED;
         rbtree_right_rotate__(t, n->parent);
-        uncle = n->parent->left;
+        brother = n->parent->left;
       }
 
-      if (uncle->right->color == RBTREE_BLACK && uncle->left->color == RBTREE_BLACK) {
-        uncle->color = RBTREE_RED;
+      if (brother->right->color == RBTREE_BLACK && brother->left->color == RBTREE_BLACK) {
+        brother->color = RBTREE_RED;
         n = n->parent;
       } else {
-        if (uncle->left->color == RBTREE_BLACK) {
-          uncle->right->color = RBTREE_BLACK;
-          uncle->color = RBTREE_RED;
-          rbtree_left_rotate__(t, uncle);
-          uncle = n->parent->left;
+        if (brother->left->color == RBTREE_BLACK) {
+          brother->right->color = RBTREE_BLACK;
+          brother->color = RBTREE_RED;
+          rbtree_left_rotate__(t, brother);
+          brother = n->parent->left;
         }
-        uncle->color = n->parent->color;
+        brother->color = n->parent->color;
         n->parent->color = RBTREE_BLACK;
-        uncle->left->color = RBTREE_BLACK;
+        brother->left->color = RBTREE_BLACK;
         rbtree_right_rotate__(t, n->parent);
         n = t->root;
       }
